@@ -1,1 +1,1 @@
-web: ./target/release/translate
+worker: ./target/release/translate

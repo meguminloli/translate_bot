@@ -15,7 +15,6 @@ struct Response {
 pub async fn check_language(message: &str, api_key: &str) -> Result<String, Box<dyn std::error::Error>> {
     let https = HttpsConnector::new();
     let client = Client::builder().build::<_, hyper::Body>(https);
-    println!("{}", message);
     let escaped = utf8_percent_encode(message, NON_ALPHANUMERIC);
     let url = format!("https://translo.p.rapidapi.com/translate?text={}&to=en", escaped);
     let body = r#"{\r
@@ -45,5 +44,7 @@ pub async fn check_language(message: &str, api_key: &str) -> Result<String, Box<
     if val.from_lang == "en" {
         return Err(Box::new(Error::new(ErrorKind::Other, "English text")));
     }
-    Ok(val.translated_text)
+    info!("{:?}", val);
+    let messages = format!("From {} to en:\n{}", val.from_lang, val.translated_text);
+    Ok(messages)
 }
